@@ -1,0 +1,375 @@
+---
+alwaysApply: true
+---
+# Cursor Rules for Laravel Frontend Project
+
+## Project Overview
+
+This is a Laravel 12 project with a custom frontend build system using Vite. The project includes:
+
+-   Laravel backend with PHP 8.2+
+-   Custom Vite configuration for frontend assets
+-   jQuery-based frontend with modern CSS/JS tooling
+-   RTL support via postcss-rtlcss
+-   Custom asset compilation pipeline
+
+## Development Guidelines
+
+### PHP/Laravel
+
+-   Use PHP 8.2+ features and modern Laravel 12 conventions
+-   Follow PSR-12 coding standards
+-   Implement proper dependency injection and service patterns
+-   Use Laravel built-in validation and authorization
+-   Follow Laravel naming conventions for routes, controllers, and models
+
+### Frontend Development
+
+-   **CSS**: Use modern CSS with PostCSS processing
+-   **JavaScript**: jQuery-based with modern ES6+ features where appropriate
+-   **Assets**: All frontend assets go in `resources/assets/`
+-   **Build**: Use Vite for asset compilation and bundling
+-   **RTL Support**: Built-in RTL support via postcss-rtlcss plugin
+
+#### HTML Structure & Classes
+
+-   **Semantic HTML**: Use proper HTML5 semantic tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`)
+-   **BEM Methodology**: Follow Block\_\_Element--Modifier naming convention for CSS classes
+-   **Component Classes**: Use descriptive, reusable class names (e.g., `.card`, `.card__title`, `.card--featured`)
+-   **Utility Classes**: Create utility classes for common patterns (e.g., `.text-center`, `.mb-20`, `.d-flex`)
+-   **State Classes**: Use state-based classes (e.g., `.is-active`, `.has-error`, `.is-loading`)
+-   **Grid Structure**: Always use the existing grid system from `shared/grids.css`:
+    -   **Container**: `<div class="container">` or `<div class="container-fluid">`
+    -   **Row**: `<div class="row">` (with optional modifiers like `.double`, `.no-gutter`)
+    -   **Columns**: `<div class="col-12 col-md-6 col-lg-4">` (responsive breakpoints)
+
+#### CSS Organization & Structure
+
+```
+resources/assets/css/
+├── shared/           # Global styles and utilities (always present)
+│   ├── base.css     # Reset, typography, base elements
+│   ├── vars.css     # CSS custom properties (CSS variables)
+│   ├── buttons.css  # Button styles and variants
+│   ├── contact-list.css # Contact information styling
+│   ├── footer.css   # Footer component styles
+│   ├── grids.css    # Grid system and layouts
+│   ├── header.css   # Header and navigation styles
+│   ├── main-classes.css # Common utility classes
+│   ├── magnific-popup.css # Modal/popup styles
+│   ├── social-list.css # Social media links
+│   └── swiper.css   # Slider/carousel styles
+├── home.css         # Homepage-specific styles
+├── inner.css        # Inner page styles
+├── inner/           # Inner page component styles
+│   ├── breadcrumb.css # Breadcrumb navigation
+│   ├── form.css     # Form styling
+│   ├── gallery.css  # Gallery layouts
+│   ├── inner-page.css # Inner page specific styles
+│   └── pagination.css # Pagination component
+└── items/           # Feature-specific component styles (new components)
+    └── section.css  # Generic section styles
+```
+
+#### CSS Organization Principles
+
+-   **shared/**: Contains global styles that are always loaded and used across all pages
+-   **home.css & inner.css**: Main page-specific styles that import shared styles and page-specific components
+-   **inner/**: Contains styles for inner page components (breadcrumbs, forms, galleries, pagination)
+-   **items/**: Contains styles for new feature components, each component gets its own CSS file
+-   **Component Separation**: Each component style is separated into its own file for maintainability
+-   **Import Strategy**:
+    -   **home.css**: Imports shared styles and homepage-specific component styles
+    -   **inner.css**: Imports shared styles, inner page components, and feature components for inner pages
+    -   **Component styles**: Never create standalone CSS files in the root css folder
+    -   **Always import**: Component styles through the main CSS files (home.css or inner.css)
+
+#### Grid System Usage
+
+-   **Use Existing Grid**: Always use the grid system defined in `shared/grids.css`
+-   **Available Classes**:
+    -   **Containers**: `.container`, `.container-fluid`
+    -   **Rows**: `.row`, `.row.double`, `.no-gutter`, `.no-padding`
+    -   **Columns**: `.col-1` through `.col-12`, `.col-custom-5` (20%), `.col-custom-40` (40%)
+    -   **Responsive**: `sm` (576px+), `md` (768px+), `lg` (992px+), `xl` (1200px+)
+
+#### CSS File Organization Rules
+
+**📋 CSS Import Rules:**
+
+1. **Component styles** go in `items/` folder
+2. **Main CSS files** (home.css, inner.css) import what they need
+3. **Vite config** only includes main CSS files, not component files
+4. **Component CSS** is automatically included through main CSS imports
+5. **Grid system** is provided by `shared/grids.css` - never create custom grids
+
+#### Adding New Pages - Correct Process
+
+**For Inner Pages (like About, Services, Contact):**
+
+1. **Create Template**: `resources/views/templates/inner/page_name.blade.php`
+2. **Use Existing Page View**: `resources/views/pages.blade.php` (dynamically includes templates)
+3. **Set Asset**: `@section('asset_name', 'inner')` (uses inner.css)
+4. **Create Component CSS**: `resources/assets/css/items/page_name.css`
+5. **Import in inner.css**: Add `@import "./items/page_name.css";`
+6. **Add JavaScript**: `resources/assets/js/page_name.js` (add to Vite config)
+7. **Add Route**: `Route::get('/page-name', function () { return view('pages'); })`
+
+**For Homepage Sections:**
+
+1. **Create Template**: `resources/views/templates/homepage/section_name.blade.php`
+2. **Create Component CSS**: `resources/assets/css/items/section_name.css`
+3. **Import in home.css**: Add `@import "./items/section_name.css";`
+
+**Key Rules:**
+
+-   **Never create standalone CSS files** in the root css folder
+-   **Always import component styles** through main CSS files
+-   **Use 'inner' asset** for inner pages, 'home' for homepage
+-   **Component CSS goes in items/**, imported through main CSS
+
+#### Template Organization
+
+**Dynamic Template System:**
+
+The project uses a dynamic template inclusion system where:
+
+-   **`pages.blade.php`** serves as the main view for inner pages
+-   **Templates** are stored in `resources/views/templates/inner/`
+-   **Route parameters** determine which template to include
+-   **No need** to create individual page views for each inner page
+
+**✅ CORRECT Template Structure:**
+
+```
+resources/views/
+├── layouts/
+│   └── app.blade.php          # Main layout
+├── templates/
+│   ├── components/            # Reusable components
+│   │   ├── section_head.blade.php
+│   │   └── news.blade.php
+│   ├── homepage/              # Homepage-specific templates
+│   │   ├── main_slider.blade.php
+│   │   ├── about.blade.php
+│   │   └── news.blade.php
+│   └── inner/                 # Inner page templates
+│       ├── page_name.blade.php # Page component template
+│       ├── news.blade.php     # News component template
+│       └── statements.blade.php
+├── home.blade.php             # Homepage (includes homepage templates)
+└── pages.blade.php            # Dynamic page view (includes templates based on route parameter)
+```
+
+**📋 Template Rules:**
+
+1. **Component templates** go in `templates/components/` (reusable across pages)
+2. **Homepage templates** go in `templates/homepage/` (homepage-specific sections)
+3. **Inner page templates** go in `templates/inner/` (inner page content)
+4. **Page views** use `pages.blade.php` for dynamic template inclusion
+5. **Templates** contain the actual content and markup
+6. **Route parameters** determine which template to include dynamically
+
+-   **CSS Custom Properties**: Define design tokens in `shared/vars.css`
+-   **Color Palette**: Use semantic color names (e.g., `--primary-color`, `--secondary-color`, `--success-color`)
+-   **Typography Scale**: Define font sizes and line heights (e.g., `--font-size-base`, `--line-height-base`)
+-   **Spacing System**: Use consistent spacing values (e.g., `--spacing-xs`, `--spacing-sm`, `--spacing-lg`)
+-   **Shadows & Effects**: Standardize shadows and transitions (e.g., `--shadow-sm`, `--transition-base`)
+
+#### jQuery File Organization
+
+```
+resources/assets/js/
+├── jquery.js        # Main jQuery library
+├── shared.js        # Common functions and utilities
+├── home.js          # Homepage-specific JavaScript
+├── inner.js         # Inner page JavaScript
+└── plugins/         # jQuery plugins and extensions
+    ├── contact.js   # Contact form functionality
+    ├── slider.js    # Slider/carousel functionality
+    ├── validation.js # Form validation
+    └── ...
+```
+
+#### jQuery Usage Guidelines
+
+-   **Document Ready**: Always wrap jQuery code in `$(document).ready()` or `$(function() {})`
+-   **Event Delegation**: Use event delegation for dynamic content (e.g., `$(document).on('click', '.dynamic-element')`)
+-   **Plugin Pattern**: Create reusable jQuery plugins for complex functionality
+-   **Performance**: Cache jQuery selectors and avoid DOM queries in loops
+-   **Modern Features**: Use ES6+ features where appropriate, jQuery for DOM manipulation
+-   **Error Handling**: Implement proper error handling for AJAX calls and user interactions
+
+#### Lazy Loading Implementation
+
+The project uses **lazysizes** library for efficient image lazy loading with the following setup:
+
+##### **Library Integration**
+
+-   **Package**: `lazysizes` v5.3.2 installed via npm
+-   **Import**: Automatically imported in `shared.js` and `inner.js` for global availability
+-   **Configuration**: Uses default lazysizes configuration with custom CSS classes
+
+##### **CSS Classes & States**
+
+```css
+/* Loading state - shows loader gif */
+.lazyload,
+.lazyloading {
+    background-color: transparent;
+    background-image: url(loader.gif);
+    background-size: 64px 64px !important;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Loaded state - removes loader, shows actual image */
+.lazyloaded {
+    height: auto;
+    width: auto;
+}
+```
+
+##### **PHP Helper Functions**
+
+Two main helper functions for generating lazy-loaded images:
+
+1. **`lazyloadImageResize($path, $width, $height, $attrs, $disabled = false)`**
+
+    - Generates resized images with lazy loading
+    - Automatically adds `lazyload` class
+    - Uses `data-src` attribute for actual image URL
+    - Sets placeholder as transparent 1x1 GIF
+
+2. **`lazyloadImage($path, $width, $height, $disabled = false, $title = "")`**
+    - Generates standard images with lazy loading
+    - Automatically extracts alt text from image metadata
+    - Same lazy loading behavior as resize function
+
+##### **HTML Implementation**
+
+```php
+{{-- Using helper functions --}}
+{!! lazyloadImageResize($item->getThumbnail('650x400'), 397, 297, $attr) !!}
+{!! lazyloadImage($imagePath, 300, 200) !!}
+
+{{-- Manual implementation --}}
+<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+     data-src="{{ $imageUrl }}"
+     width="300" height="200"
+     alt="Description"
+     class="lazyload">
+```
+
+##### **Lazy Loading Best Practices**
+
+-   **Always use helper functions** instead of manual HTML for consistency
+-   **Set proper dimensions** (width/height) to prevent layout shifts
+-   **Provide meaningful alt text** for accessibility
+-   **Use appropriate image sizes** for different screen resolutions
+-   **Test loading states** to ensure smooth user experience
+-   **Monitor performance** using browser dev tools
+
+##### **Supported Image Types**
+
+-   **Storage images**: Automatically handled via `upload_url()` helper
+-   **External URLs**: Direct URL support for external images
+-   **Responsive images**: Support for different sizes via resize function
+-   **Background images**: CSS-based lazy loading for background images
+
+##### **Performance Benefits**
+
+-   **Reduced initial page load time** by deferring off-screen images
+-   **Bandwidth optimization** by loading images only when needed
+-   **Improved Core Web Vitals** (LCP, CLS) scores
+-   **Better mobile performance** on slower connections
+-   **SEO benefits** from faster page loading
+
+#### Vite Configuration Details
+
+The `vite.config.frontend.mjs` handles:
+
+-   **Entry Points**: Multiple CSS and JS entry points for different page types
+-   **Asset Copying**: Automatic copying of fonts and images to public directory
+-   **PostCSS Processing**: RTL support and CSS optimization
+-   **Build Output**: Organized output structure in `public/front/` directory
+
+#### Adding New Assets to Vite
+
+To add new CSS/JS files:
+
+1. **JavaScript Files**: Add to the `input` array in `vite.config.frontend.mjs`
+2. **CSS Component Files**: Place in `resources/assets/css/items/` and import through main CSS files
+3. **CSS Import Strategy**:
+    - **home.css**: Import homepage-specific component styles
+    - **inner.css**: Import inner page and feature component styles
+    - **Never create standalone CSS files** in the root css folder
+4. **Build Process**: Run `npm run build:frontend` to compile new assets
+5. **Include in Views**: Use `@vite()` directive with the main CSS file (home.css or inner.css)
+
+### File Organization
+
+-   **Controllers**: `app/Http/Controllers/` - Keep controllers thin, move business logic to services
+-   **Models**: `app/Models/` - Use Eloquent relationships and scopes
+-   **Views**: `resources/views/` - Use Blade templates with proper componentization
+-   **Assets**: `resources/assets/` - Organized by type (css, js, images, fonts)
+-   **Helpers**: `Helpers/` - Custom PHP helper functions
+-   **Routes**: `routes/web.php` - Keep routes clean and organized
+
+### Asset Management
+
+-   **CSS**: Place in `resources/assets/css/` with subdirectories for organization
+-   **JavaScript**: Place in `resources/assets/js/` with plugins in subdirectories
+-   **Images**: Place in `resources/assets/images/` - will be copied to public during build
+-   **Fonts**: Place in `resources/assets/fonts/` - supports multiple formats (eot, svg, ttf, woff, woff2)
+
+### Build Process
+
+-   **Development**: `npm run dev` - starts Vite dev server
+-   **Frontend Build**: `npm run build:frontend` - builds frontend assets
+-   **Watch Mode**: `npm run watch:frontend` - watches for changes and rebuilds
+-   **Full Dev**: `composer run dev` - starts all services (server, queue, logs, vite)
+
+#### Asset Build Pipeline
+
+1. **CSS Processing**: PostCSS with RTL support, autoprefixer, and optimization
+2. **JavaScript Bundling**: ES6+ transpilation, jQuery compatibility, plugin bundling
+3. **Asset Optimization**: Image compression, font optimization, CSS/JS minification
+4. **Output Structure**: Organized assets in `public/front/` with hashed filenames
+5. **Development Server**: Hot module replacement for CSS and fast refresh for JS
+
+#### Asset Inclusion in Views
+
+````php
+{{-- In Blade templates --}}
+@vite(['resources/assets/css/home.css', 'resources/assets/js/home.js'])
+
+
+## Common Commands
+
+```bash
+# Development
+composer run dev          # Start all development services
+npm run dev              # Start Vite dev server
+npm run build:frontend   # Build frontend assets
+npm run watch:frontend   # Watch and rebuild frontend
+
+
+
+
+### Responsive Design Approach
+
+-   **Mobile First**: Start with mobile styles, then enhance for larger screens
+-   **Breakpoint Strategy**: Use consistent breakpoints defined in CSS variables
+-   **Flexible Grid**: Implement CSS Grid or Flexbox for responsive layouts
+-   **Touch Friendly**: Ensure touch targets are at least 44x44px on mobile
+-   **Performance**: Optimize images and assets for different screen sizes
+
+### Accessibility Guidelines
+
+-   **Semantic HTML**: Use proper heading hierarchy and semantic elements
+-   **ARIA Labels**: Add appropriate ARIA attributes for complex interactions
+-   **Keyboard Navigation**: Ensure all interactive elements are keyboard accessible
+-   **Color Contrast**: Maintain WCAG AA contrast ratios (4.5:1 for normal text)
+-   **Focus Management**: Provide visible focus indicators and logical tab order
+````

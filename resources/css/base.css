@@ -1,0 +1,52 @@
+* {
+    font-family: var(--font);
+    box-sizing: border-box;
+    outline: none;
+    -webkit-text-size-adjust: none;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    cursor: default;
+    margin: 0;
+    overflow-x: hidden;
+    color: var(--primary-gray-color);
+}
+
+main {
+    background-color: #fff;
+    min-height: calc(100vh - 413px);
+}
+
+img,
+video,
+iframe {
+    display: block;
+    max-width: 100%;
+}
+
+a[href] {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+form {
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+}

@@ -1,0 +1,35 @@
+:root {
+    --primary-color: #f18e2b;
+    --primary-color-rgb: 241, 142, 43;
+    --secondary-color: #339ad2;
+    --secondary-color-rgb: 51, 154, 210;
+
+    --container-width: 1200px;
+    --container-padding: 40px;
+    --gutter-x: 10px;
+    --border-color: #e0e0e0;
+    --border-radius: 12px;
+    --font: "Times New Roman", Times, serif;
+
+    --title-size: 30px;
+    --desc-size: 17px;
+}
+
+@media screen and (max-width: 1280.98px) {
+    :root {
+        --title-size: 28px;
+        --desc-size: 16px;
+    }
+}
+
+@media screen and (max-width: 991.98px) {
+    :root {
+        --container-padding: 30px;
+    }
+}
+
+@media screen and (max-width: 767.98px) {
+    :root {
+        --container-padding: 20px;
+    }
+}

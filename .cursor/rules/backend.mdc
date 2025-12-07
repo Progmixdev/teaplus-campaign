@@ -1,0 +1,351 @@
+---
+alwaysApply: true
+---
+
+# Cursor Rules for Progmix CMS (Laravel-based CMS)
+
+You are an expert in Laravel, PHP, and related web development technologies.
+
+## Project Overview
+
+This is a Laravel-based Content Management System (CMS) with a modular architecture. The project uses Laravel 10.x with custom modules, plugins.
+
+## Technology Stack
+
+-   **Framework**: Laravel 10.x
+-   **PHP Version**: ^8.1
+-   **Database**: MySQL
+-   **Frontend**: Blade templates, Vite for asset compilation
+-   **Architecture**: Modular CMS with plugin system
+
+## Project Structure
+
+-   **modules/**: Core CMS modules (Backend, Frontend, API, CMS, etc.)
+-   **plugins/**: Extensible plugin system
+-   **packages/**: Custom packages (progmix)
+-   **public/**: Web root with compiled assets
+
+## Coding Standards
+
+### PHP/Laravel
+
+-   Follow PSR-12 coding standards
+-   Use Laravel conventions for naming, structure, and patterns
+-   Prefer dependency injection over facades when possible
+-   Utilize Laravel's built-in features and helpers to maximize efficiency.
+-   Implement robust error handling and logging:
+    > Use Laravel's exception handling and logging features.
+    > Create custom exceptions when necessary.
+    > Employ try-catch blocks for expected exceptions.
+-   Use Laravel's validation features for form and request data.
+-   Implement middleware for request filtering and modification.
+-   Utilize Laravel's Eloquent ORM for database interactions.
+-   Use Laravel's query builder for complex database operations.
+-   Create and maintain proper database migrations and seeders.
+
+### Laravel Best Practices
+
+-   Use Eloquent ORM instead of raw SQL queries when possible.
+-   Use Laravel's built-in authentication and authorization features.
+-   Utilize Laravel's caching mechanisms for improved performance.
+-   Implement job queues for long-running tasks.
+-   Implement API versioning for public APIs.
+-   Use Laravel's localization features for multi-language support.
+-   Implement proper security measures, including CSRF protection, XSS prevention, and input sanitization
+-   Implement proper database indexing for improved query performance.
+-   Use Laravel's built-in pagination features.
+-   Implement proper error logging and monitoring.
+
+# Plugin Development Rules for CRUD Functionality
+
+## Plugin Structure
+
+**Create plugins using the Artisan command:**
+
+```bash
+php artisan plugin:make progmix/plugin-name
+```
+
+**Use these Artisan commands for plugin components:**
+
+```bash
+# Create Action
+php artisan plugin:make-action ActionName progmix/plugin-name
+
+# Create Migration
+php artisan plugin:make-migration create_examples_table progmix/plugin-name
+
+# Create Model
+php artisan plugin:make-model Example progmix/plugin-name
+
+# Create Controller
+php artisan plugin:make-controller ModelName progmix/plugin-name
+
+# Create Resource (CRUD) - GENERATES EVERYTHING AT ONCE!
+php artisan plugin:make-jwresource table_name progmix/plugin-name
+
+# Migrate Plugin
+php artisan plugin:migrate progmix/plugin-name
+
+# Rollback Plugin Migration
+php artisan plugin:migrate-rollback progmix/plugin-name
+```
+
+**⚠️ IMPORTANT**:
+
+-   The table name parameter must match the actual table name in the database (including plugin prefix)
+-   Example: If migration creates `prwe_weather_records`, use `prwe_weather_records` in the command
+
+Follow this structure:
+
+```
+plugins/{plugin-name}/
+├── src/
+│   ├── Actions/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   └── Datatables/
+│   ├── Models/
+│   ├── Providers/
+│   ├── resources/
+│   │   ├── lang/
+│   │   │   ├── {locale1}/
+│   │   │   │   └── content.php
+│   │   │   ├── {locale2}/
+│   │   │   │   └── content.php
+│   │   │   └── ... (one folder per configured locale)
+│   │   └── views/
+│   │       └── backend/
+├── database/
+│   ├── migrations/
+│   └── seeders/
+└── composer.json
+```
+
+## 1. Controller Pattern
+
+**Quick Setup (Recommended)**: Use `php artisan plugin:make-jwresource table_name progmix/plugin-name` to generate all CRUD components at once!
+
+**What `make-jwresource` generates:**
+
+-   Model with ResourceModel trait
+-   Controller extending BackendController with ResourceController trait
+-   Datatable extending DataTable
+-   Views (index.blade.php, form.blade.php)
+-   Routes with jwResource
+-   Migration file
+
+**⚠️ CRITICAL: Method Signature Compatibility**
+
+-   All trait methods MUST use `...$params` parameter signature
+-   `getDataTable(...$params)` - not `getDataTable()`
+-   `validator(array $attributes, ...$params)` - not `validator(array $attributes)`
+-   `getModel(...$params)` - not `getModel()`
+-   `getTitle(...$params)` - not `getTitle()`
+-   This prevents "Declaration must be compatible" errors
+
+## 2. Model Pattern
+
+-   Extend `Model` and use `ResourceModel` trait
+-   Set `$table` property to table name
+-   Define `$guarded` and `$fillable` arrays
+-   Keep model simple with only essential properties
+
+## 3. Datatable Pattern
+
+-   Extend `DataTable` abstract class
+-   Implement `columns()` method with proper column definitions
+-   Use `rowActionsFormatter` for the first column (usually name/title)
+-   Implement `query()` method with search functionality
+-   Add `bulkActions()` method for delete operations
+-   Use `JW_SQL_LIKE` constant for search queries
+
+## 4. View Pattern
+
+-   **Index view**: Extend `cms::layouts.backend` and use `{{ $dataTable->render() }}`
+-   **Form view**: Extend `cms::layouts.backend` and use `cms::components.form_resource`
+-   Use appropriate Field components for form inputs:
+    -   `Field::text()` for text inputs
+    -   `Field::date()` for date inputs
+    -   `Field::textarea()` for long text
+    -   `Field::select()` for dropdowns
+-   **Date Inputs**: Always use `'type' => 'date'` attribute for date fields
+-   Apply consistent styling and layout structure
+-   **⚠️ IMPORTANT**: Only keep views in `backend/` folder, remove any root-level view files
+
+## 5. Routes Pattern
+
+-   Use `Route::jwResource('{resource-name}', {ControllerName}::class)`
+-   Keep routes simple and follow RESTful conventions
+-   **⚠️ IMPORTANT**: Add routes to `src/routes/admin.php` file
+-   **Route Format**: `Route::jwResource('table_name', ControllerName::class);`
+
+## 6. Service Provider Pattern
+
+-   Extend `ServiceProvider`
+-   Register actions in `boot()` method using `ActionRegister::register()`
+-   Keep `register()` method minimal
+
+## 7. Action Pattern
+
+-   Extend `Action` abstract class
+-   Implement `handle()` method with action registration
+-   Register admin menu using `HookAction::addAdminMenu()`
+-   Register permissions using `registerPermissionGroup()` and `registerResourcePermissions()`
+-   **Permission Registration**: Use `HookAction::registerResourcePermissions('group_key', 'resource_name')` to register all CRUD permissions at once
+-   Set proper icon, position, and permission keys
+
+## 8. Migration Pattern
+
+-   Create table with standard fields: `id`, `name`, `timestamps`
+-   Add custom fields as needed
+-   Use proper column types and constraints
+-   **Table naming**: Laravel automatically prefixes tables with plugin abbreviation.
+-   **For make-jwresource**: Use the full table name including prefix.
+
+## 9. Composer.json Pattern
+
+-   Set proper namespace and autoloading
+-   Include Laravel providers array
+-   Add Juzaweb-specific metadata (name, domain, cms_min, version)
+
+## 10. Naming Conventions
+
+-   Controller: `{ModelName}Controller`
+-   Model: `{ModelName}` (singular)
+-   Datatable: `{ModelName}Datatable`
+-   Action: `{ModelName}Action`
+-   Service Provider: `{ModelName}ServiceProvider`
+-   Table name: `{model_names}` (plural, lowercase)
+
+## 11. Required Traits and Extensions
+
+-   Controller: `BackendController` + `ResourceController` trait
+-   Model: `Model` + `ResourceModel` trait
+-   Datatable: `DataTable` abstract class
+-   Action: `Action` abstract class
+-   Service Provider: `ServiceProvider`
+
+## 12. Form Validation
+
+-   Implement `validator()` method in controller
+-   Use Laravel's `Validator::make()` with proper rules
+-   Return validator instance
+
+## 13. Permission Structure
+
+-   Create permission group for the plugin using `registerPermissionGroup()`
+-   **Use `registerResourcePermissions()` to register all CRUD permissions at once**
+-   This automatically creates: index, create, edit, delete permissions
+-   Use consistent permission keys and descriptions
+-   **Example**: `HookAction::registerResourcePermissions('students', 'prst_students')`
+-   **⚠️ CRITICAL**: Create a Policy file and register it in AuthServiceProvider for permissions to work
+-   **Policy Pattern**: Extend `ResourcePolicy` and set `$resourceType` to match permission group key
+-   **Registration**: Add model => policy mapping in `modules/Backend/Providers/AuthServiceProvider.php`
+
+## 14. Admin Menu Integration
+
+-   Register menu item with proper icon and position
+-   Set permissions array for access control
+-   Use descriptive names and proper positioning
+
+## 15. Search and Filtering
+
+-   Implement keyword search in datatable query
+-   Use `Arr::get()` for data extraction
+-   Apply search to relevant fields using `JW_SQL_LIKE`
+
+## 16. Bulk Operations
+
+-   Support delete operation in `bulkActions()`
+-   Use model's `destroy()` method for bulk deletion
+-   Handle action parameter and IDs array
+
+## 17. Translation Support
+
+-   Use `trans()` and `trans_cms()` helpers
+-   Create language files for content translations
+-   Use consistent translation keys
+-   **Language Structure**: Create `src/resources/lang/{locale}/content.php` files
+-   **Supported Locales**: Check `config/app.php` locales array and create folders for each configured locale
+-   **Translation Keys**: Use descriptive keys.
+-   **File Format**: Return array with key-value pairs for translations
+-   **REQUIRED BY DEFAULT**: Always create translation files for all configured locales when developing plugins
+-   **Translation Keys to Include**: `name`, `title`, and all form field labels used in views
+-   **Dynamic Approach**: If new locales are added to `config/app.php`, create corresponding language folders
+
+## 18. Resource Controller Integration
+
+-   Leverage built-in CRUD operations from `ResourceController`
+-   Override only necessary methods
+-   Maintain consistent method signatures
+
+## 19. Policy Integration
+
+-   **Create Policy File**: Create `modules/Backend/Policies/{ModelName}Policy.php`
+-   **Extend ResourcePolicy**: Use `Juzaweb\CMS\Abstracts\ResourcePolicy` as base class
+-   **Set Resource Type**: Define `protected string $resourceType = 'permission_group_key';`
+-   **Register in AuthServiceProvider**: Add model => policy mapping in `$policies` array
+
+## 20. Database Design
+
+-   Use standard Laravel migration structure
+-   Include created_at and updated_at timestamps
+-   Set proper column types and constraints
+-   Follow naming conventions
+
+## Implementation Checklist
+
+-   [ ] Create plugin using: `php artisan plugin:make progmix/plugin-name`
+-   [ ] **OPTION 1 - Quick Setup (Recommended):**
+    -   [ ] Create migration: `php artisan plugin:make-migration create_table_name_table progmix/plugin-name`
+    -   [ ] Run migration: `php artisan plugin:migrate progmix/plugin-name` (creates table)
+    -   [ ] Create resource (CRUD): `php artisan plugin:make-jwresource table_name progmix/plugin-name`
+    -   [ ] This generates: Model, Controller, Datatable, Views, Routes
+-   [ ] Create action: `php artisan plugin:make-action ActionName progmix/plugin-name`
+-   [ ] **Create translation files by default:**
+    -   [ ] Check `config/app.php` locales array for supported languages
+    -   [ ] Create `src/resources/lang/{locale}/content.php` for each configured locale
+    -   [ ] Add translation keys for all plugin content
+-   [ ] **Configure permissions**: Use `registerResourcePermissions()` for automatic CRUD permission creation
+-   [ ] **Create Policy file**: Extend ResourcePolicy and set resourceType
+-   [ ] **Register Policy**: Add model => policy mapping in AuthServiceProvider
+-   [ ] Configure composer.json
+-   [ ] Test CRUD operations
+-   [ ] Verify datatable functionality
+-   [ ] Check form validation
+-   [ ] Test bulk operations
+
+**Important Notes:**
+
+-   Use only the controller generated by `make-jwresource` (located in `Backend/` directory)
+-   Ensure admin menu key in Action matches the actual route name
+-   Always use `...$params` in method signatures when extending ResourceController
+
+## Key Benefits of This Pattern
+
+-   Consistent structure across all plugins
+-   Leverages built-in CMS functionality
+-   Minimal custom code required
+-   Built-in permission system
+-   Automatic CRUD operations
+-   Responsive datatable with search
+-   Form validation and error handling
+-   Admin menu integration
+-   Bulk operations support
+
+## **Recommended Workflow for New Plugins**
+
+1. **Create plugin**: `php artisan plugin:make progmix/plugin-name`
+2. **Create migration**: `php artisan plugin:make-migration create_table_name_table progmix/plugin-name`
+3. **Run migration**: `php artisan plugin:migrate progmix/plugin-name` (creates table)
+4. **Generate CRUD**: `php artisan plugin:make-jwresource table_name progmix/plugin-name`
+5. **Create action**: `php artisan plugin:make-action ActionName progmix/plugin-name`
+6. **Create language files**: Check `config/app.php` locales and create `content.php` for each locale
+7. **Configure permissions**: Use `registerResourcePermissions()` for automatic CRUD permission creation
+8. **Create Policy file**: Extend ResourcePolicy and set resourceType
+9. **Register Policy**: Add model => policy mapping in AuthServiceProvider
+10. **Clean up unnecessary files**: Remove any root-level view files, keep only `backend/` folder
+11. **Add routes**: Ensure routes are in `src/routes/admin.php` file
+12. **Customize generated files** (if needed)
+13. **Test functionality**

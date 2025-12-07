@@ -1,0 +1,528 @@
+---
+alwaysApply: true
+---
+
+# Cursor Rules for Forthing Laravel Project
+
+You are an expert in Laravel, PHP, Livewire and related web development technologies.
+
+## Project Overview
+
+This is a Laravel 11 application with Livewire 3, extensive frontend tooling, and a complex asset management system.
+
+## Technology Stack
+
+-   **Backend**: Laravel 11, PHP 8.2+
+-   **Frontend**: Livewire 3, Bootstrap 5, jQuery
+-   **Asset Management**: Laravel Mix, Webpack, SCSS
+-   **Database**: MySQL with extensive migrations and seeders
+-   **Additional**: DataTables, Excel import/export, PDF generation, Activity logging
+
+## Code Style & Standards
+
+### PHP/Laravel
+
+-   Follow PSR-12 coding standards
+-   Use Laravel naming conventions (snake_case for database, camelCase for methods)
+-   Prefer Laravel's built-in features over custom implementations
+-   Use dependency injection and service containers
+-   Follow Laravel's model conventions and relationships
+-   Use Laravel's validation rules and form requests
+-   Implement proper error handling with try-catch blocks
+
+### Livewire Components
+
+-   Keep components focused and single-purpose
+-   Use proper Livewire 3 syntax and lifecycle hooks
+-   Implement proper validation in Livewire forms
+-   Use wire:model for form inputs
+-   Follow Livewire naming conventions
+-   Implement proper error handling and user feedback
+-   **Use Select2 for dropdowns with model data in Livewire forms**
+-   **Implement proper wire:ignore and data-control="select2" attributes**
+
+#### Livewire Component Structure
+
+-   Place components in `app/Livewire/` directory
+-   Use PascalCase for component class names (e.g., `UserModal.php`)
+-   Use kebab-case for component view files (e.g., `user-modal.blade.php`)
+-   Follow namespace structure: `App\Livewire\{Feature}\{ComponentName}`
+-   **Modal components should be thin - only handle UI state and dispatch events**
+-   **Use `#[On('event_name')]` attributes for event handling**
+-   **Implement `hydrate()` method for error handling**
+-   **Use `AuthorizesRequests` trait for permission checks**
+
+#### Livewire Forms
+
+-   Create form classes in `app/Livewire/Forms/` directory
+-   **Extend `Livewire\Form` class (not `Livewire\Attributes\Rule`)**
+-   **Implement `rules()` method that returns validation array**
+-   **Implement `save()` method for form submission with proper error handling**
+-   **Implement `set()` method for populating form data when editing**
+-   **Implement `reset{ModuleName}()` method for clearing form data**
+-   **Implement `delete()` method for deletion operations**
+-   **Return consistent message format: `['success|error', 'message']`**
+
+#### Livewire Views
+
+-   Place views in `resources/views/livewire/` directory
+-   Use kebab-case naming convention
+-   **Use Bootstrap modal structure with `data-bs-toggle` and `data-bs-target`**
+-   **Implement proper modal events: `show.bs.modal` for data loading**
+-   **Use `wire:ignore.self` for modal containers**
+-   **Implement proper loading states with `wire:loading`**
+-   **Use `wire:model` for form inputs (not `wire:model.live`)**
+-   **Implement proper error display with `@error('form.field')`**
+-   **Use `@script` directive for modal event handling**
+
+#### Livewire Real-time Updates
+
+-   **ALWAYS use `wire:model.live` for form inputs that should trigger immediate component updates**
+-   **Use `wire:model.live` on select dropdowns that control conditional rendering of other form elements**
+-   **Use `wire:model.live` on radio buttons, checkboxes, and other inputs that should update the UI immediately**
+-   **Standard `wire:model` should only be used for form submission data that doesn't need real-time updates**
+-   **Example**: `wire:model.live="assigned_to_type"` for assignment type dropdown, `wire:model="assigned_to_id"` for the dependent assignment dropdown
+-   **When using `wire:model.live`, ensure the component properly handles the real-time updates with conditional rendering using `wire:key`**
+
+### Database Queries
+
+-   **ALWAYS use Eloquent models instead of `DB::table()` for database queries**
+-   **Use model relationships and methods for data retrieval and manipulation**
+-   **Example**: Use `User::findOrFail($id)` instead of `DB::table('users')->where('id', $id)->first()`\*\*
+-   **This ensures proper model events, relationships, and data integrity**
+-   **Only use `DB::` facade for complex raw queries that cannot be handled by Eloquent**
+
+### Frontend/JavaScript
+
+-   Use modern ES6+ syntax when possible
+-   Follow consistent naming conventions (camelCase for variables/functions)
+-   Implement proper error handling and user feedback
+-   Use Bootstrap 5 classes and components
+-   Use DataTables for data display and manipulation
+-   **Use Select2 plugin for all dropdowns with model data (users, customers, brands, etc.)**
+-   **Follow established Select2 implementation pattern for consistency**
+
+#### DataTables Implementation
+
+-   Create DataTable classes in `app/DataTables/` directory
+-   Extend `Yajra\DataTables\DataTableAbstract`
+-   Use `query()` method to define base query
+-   Implement `getColumns()` method for column definitions
+-   Use `addColumn()` for computed columns
+-   Implement proper filtering and searching
+-   Use `editColumn()` for formatting existing columns
+-   Add action buttons with `addColumn('actions')`
+-   Implement proper authorization checks in DataTables
+-   **Implement dropdown filters for status, priority, and other enum/select columns**
+-   **Use `minifiedAjax()` with filter parameters for server-side filtering**
+-   **Pass filter data from controller to view for dropdown options**
+
+#### DataTable Filter Implementation Pattern
+
+-   **Controller**: Pass filter options to view (e.g., `$statuses`, `$priorities`)
+-   **View**: Add Select2 dropdowns with `data-list` class and proper IDs
+-   **DataTable**: Use `minifiedAjax()` with filter parameters and implement filtering in `query()` method
+-   **JavaScript**: Add change listeners for `.data-list` elements to reload DataTable
+-   **ALWAYS include "All" option**: First option in every filter dropdown must be "All" with empty value
+-   **Default selection**: "All" option should be the default selected option
+-   **Filter Structure**:
+
+    ```php
+    // Controller
+    $statuses = Model::getStatusOptions();
+    return $dataTable->render('view', compact('statuses'));
+
+    // DataTable query method
+    if (request()->has('status') && request('status') != null) {
+        $query->where('status', request('status'));
+    }
+
+    // DataTable html method
+    ->minifiedAjax('', null, [
+        'status' => 'function() { return $("#status_filter").val(); }',
+    ])
+
+    // View
+    <select class="data-list" id="status_filter" data-control="select2">
+        <option value="">{{ __('dashboard.all') }}</option>
+        @foreach ($statuses as $value => $label)
+            <option value="{{ $value }}">{{ __('dashboard.' . $value) }}</option>
+        @endforeach
+    </select>
+
+    // JavaScript
+    $('.data-list').on('change', function() {
+        window.LaravelDataTables['table-id'].ajax.reload();
+    });
+    ```
+
+### CSS/SCSS
+
+-   Use Bootstrap 5 utility classes when possible
+-   Follow BEM methodology for custom CSS
+-   Use SCSS variables for consistent theming
+-   Implement responsive design principles
+-   Use CSS Grid and Flexbox for layouts
+
+## File Organization
+
+### Controllers
+
+-   Keep controllers thin - business logic should be in services
+-   Use resource controllers for CRUD operations
+-   Implement proper authorization checks
+-   Use form requests for validation
+-   Follow Laravel's controller naming conventions
+
+### Models
+
+-   Use Eloquent relationships properly
+-   Implement model observers when needed
+-   Use model factories for testing
+-   Implement proper attribute casting
+-   Use model events sparingly
+
+### Views/Blade Templates
+
+-   Use Blade components for reusable UI elements
+-   Implement proper layouts and partials
+-   Use Livewire components for dynamic content
+-   Follow consistent naming conventions
+-   Implement proper accessibility features
+-   **Add Select2 filter dropdowns for DataTable columns with enum/select values**
+-   **Use `data-list` class for filter dropdowns to enable automatic DataTable reloading**
+
+### Livewire Components
+
+-   Organize by feature/domain
+-   Use proper namespacing
+-   Implement proper validation
+-   Use wire:loading states for better UX
+-   Handle errors gracefully
+
+## Database & Migrations
+
+-   Use descriptive migration names
+-   Implement proper foreign key constraints
+-   Use database indexes for performance
+-   Follow Laravel's migration conventions
+-   Use seeders for test data
+
+## Security Considerations
+
+-   Always validate and sanitize user input
+-   Use Laravel's built-in CSRF protection
+-   Implement proper authorization checks
+-   Use prepared statements (Laravel handles this)
+-   Follow OWASP security guidelines
+-   Implement proper session management
+
+## Performance Best Practices
+
+-   Use Laravel's query optimization features
+-   Implement proper caching strategies
+-   Use eager loading for relationships
+-   Optimize asset loading and bundling
+-   Use database indexes appropriately
+-   Implement pagination for large datasets
+
+## Asset Management
+
+-   Use Laravel Mix for asset compilation
+-   Organize SCSS files logically
+-   Minimize and optimize assets for production
+-   Use proper asset versioning
+-   Implement RTL support when needed
+
+## Internationalization
+
+-   Use Laravel's localization features
+-   Store all user-facing strings in language files
+-   Support both English and Arabic languages
+-   Use proper RTL layout support
+-   **ALWAYS use translations from `dashboard.php` language files instead of hardcoded text**
+-   **Add new module translations to both `lang/en/dashboard.php` and `lang/ar/dashboard.php`**
+-   **Use `{{ __('dashboard.key') }}` syntax in all Blade views and Livewire components**
+-   **Follow existing translation key naming conventions (e.g., `customer_complaints`, `add_complaint`, `edit_complaint`)**
+
+## Module Development & System Architecture
+
+### Creating New Modules
+
+Follow this complete workflow to create new modules in the system:
+
+#### 1. Database & Migrations
+
+```bash
+# Create migration
+php artisan make:migration create_{module_name}_table
+
+# Create seeder
+php artisan make:seeder {ModuleName}Seeder
+
+# Create model
+php artisan make:model {ModuleName}
+
+```
+
+#### 2. Model Structure
+
+-   Place models in `app/Models/` directory
+-   Use PascalCase naming (e.g., `Product.php`)
+-   Implement proper Eloquent relationships
+-   Use model observers when needed
+-   Implement proper attribute casting
+-   Use model factories for testing
+
+#### 3. Controllers
+
+```bash
+# Create controller (only for index method)
+php artisan make:controller Apps/{ModuleName}Controller
+
+```
+
+-   Keep controllers thin - only handle index method for DataTable rendering
+-   **CRUD operations are handled entirely by Livewire components**
+-   Implement proper authorization with `$this->authorize()`
+-   No need for resource controllers since all CRUD is in Livewire modals
+
+#### 4. Livewire Components
+
+```bash
+# Create Livewire modal component (handles all CRUD operations)
+php artisan make:livewire {ModuleName}Modal
+
+# Create Livewire form class (required for form handling)
+php artisan make:livewire Forms/{ModuleName}Form
+```
+
+-   **Main Livewire component handles ALL CRUD operations** (create, edit, delete)
+-   Use Bootstrap modals for create/edit forms, not full pages
+-   **Use Livewire events** (`#[On('update_{module}')]`, `#[On('delete_{module}')]`) for CRUD operations
+-   **Form class handles validation, data management, and business logic**
+-   **Modal component only handles UI state and dispatches events**
+-   No need for separate listing component - DataTable handles the listing
+
+#### 5. DataTables
+
+```bash
+# Create DataTable class
+php artisan make:datatable {ModuleName}DataTable
+```
+
+-   Extend `Yajra\DataTables\DataTableAbstract`
+-   Implement proper query optimization
+-   Add action columns for CRUD operations
+-   Implement proper filtering and searching
+-   **Include `_draw-scripts.js` in drawCallback for delete functionality**
+-   **Use `file_get_contents(resource_path('views/pages/apps/{module-name}/columns/_draw-scripts.js'))`**
+
+#### 6. Views & Blade Templates
+
+-   Create views in `resources/views/pages/apps/{module-name}/`
+-   Use kebab-case for file names
+-   **Create list.blade.php for DataTable listing**
+-   **CRUD operations use Livewire modals, not full pages**
+-   Use DataTable for listing with Livewire modal forms
+-   Follow consistent naming conventions
+
+-   **Create `columns/_draw-scripts.js` for delete functionality and DataTable interactions**
+-   **Create `columns/_actions.blade.php` for action buttons with consistent structure**
+-   **ALWAYS use translations from `dashboard.php` instead of hardcoded text**
+-   **Use `{{ __('dashboard.key') }}` for all user-facing strings**
+-   **Add module-specific translations to both English and Arabic language files**
+
+#### 6.1 Actions Blade Template Structure
+
+-   **File location**: `resources/views/pages/apps/{module-name}/columns/_actions.blade.php`
+-   **Button structure**: Use `btn btn-light btn-active-light-primary btn-flex btn-center btn-sm` classes
+-   **Menu structure**: Use Bootstrap dropdown menu with proper classes
+-   **Edit functionality**: Use `data-{module}-id="{{ $item->id }}"` and `data-bs-toggle="modal"` with `data-bs-target="#kt_modal_add_{module}"`
+-   **Delete functionality**: Use `data-{module}-id="{{ $item->id }}"` and `data-kt-action="delete_row"`
+-   **Permission checks**: Use `@can('view {module}')`, `@can('edit {module}')`, `@can('delete {module}')`
+-   **Translations**: Use `{{ __('dashboard.actions') }}`, `{{ __('dashboard.view') }}`, `{{ __('dashboard.edit') }}`, `{{ __('dashboard.delete') }}`
+-   **Modal integration**: Edit button must open modal and pass item ID for proper edit functionality
+
+#### 6.2 Modal JavaScript Integration
+
+-   **Modal event handling**: Use `show.bs.modal` event listener to detect edit vs create mode
+-   **Edit mode detection**: Check for `data-{module}-id` attribute on the triggering button
+-   **Event dispatching**: Dispatch `update_{module}` event with item ID for edit mode, `reset_{module}` for create mode
+-   **Livewire integration**: Use `$wire.dispatch()` to communicate with Livewire components
+-   **Form population**: Edit mode should automatically populate form fields with existing data
+-   **Form reset**: Create mode should reset all form fields to empty state
+
+#### 6.3 Select2 Integration for Dropdowns
+
+-   **Use Select2 for model data**: All select dropdowns with model data (users, customers, brands, etc.) must use Select2 plugin
+-   **Implementation pattern**:
+    -   Add `wire:ignore` to the select container div
+    -   Add `data-control="select2"` attribute to the select element
+    -   Initialize Select2 in `$(document).ready()` function
+    -   Handle change events with `$wire.set()` for Livewire integration
+-   **Example structure**:
+    ```html
+    <div wire:ignore class="fv-row mb-7">
+        <select
+            wire:model="form.field"
+            class="form-select form-select-solid"
+            data-control="select2"
+            id="field_select"
+        >
+            <option value="">Select Option</option>
+            @foreach($items as $item)
+            <option value="{{ $item->id }}">{{ $item->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    ```
+-   **JavaScript initialization**:
+    ```javascript
+    $(document).ready(function () {
+        $("#field_select").select2();
+        $("#field_select").on("change", function (e) {
+            var data = $("#field_select").select2("val");
+            $wire.set("form.field", data);
+        });
+    });
+    ```
+
+#### 7. Routes
+
+-   Add routes in `routes/web.php`
+-   Use route groups for admin functionality
+-   Implement proper middleware (auth, permissions)
+-   **Only add index route** - no resource routes needed
+-   **Example**: `Route::get('/customer-complaints', [CustomerComplaintController::class, 'index'])->name('customer-complaints.index');`
+
+#### 8. Breadcrumbs
+
+-   Add breadcrumb definitions in `routes/breadcrumbs.php`
+-   Follow the pattern: `{module-name}.list`
+-   **Example**: `Breadcrumbs::for('customer-complaints.list', function (BreadcrumbTrail $trail) { $trail->parent('dashboard'); $trail->push('Customer Complaints', route('customer-complaints.index')); });`
+-   Use in views: `{{ Breadcrumbs::render('customer-complaints.list') }}`
+
+#### 9. Permissions & Seeding
+
+```bash
+# Create permission seeder
+php artisan make:seeder {ModuleName}PermissionSeeder
+```
+
+-   **IMPORTANT**: Add new module permissions to `database/seeders/RolesPermissionsSeeder.php` inside the `permissions_by_role['administrator']` array
+-   Use Spatie Laravel Permission package
+-   Implement proper role-based access control
+-   Seed default permissions and roles
+-   Follow the existing permission structure: add only the module name (e.g., 'products'), the system automatically generates 'view products', 'create products', 'edit products', 'delete products'
+
+#### 10. BasicDatabaseSeeder Integration
+
+```bash
+# Add module seeder to BasicDatabaseSeeder
+```
+
+-   **IMPORTANT**: Add new module seeder to `database/seeders/BasicDatabaseSeeder.php` in the `$this->call()` array
+-   **Place after `RolesPermissionsSeeder::class`** to ensure permissions are created first
+-   **Example**: `{ModuleName}Seeder::class,`
+-   This ensures the module data is seeded when running `php artisan db:seed`
+
+#### 11. Menu Integration
+
+-   Add menu items to `resources/views/layout/partials/sidebar-layout/sidebar/_menu.blade.php`
+-   Use proper icons and naming
+-   **Implement proper permission checks with `@can('view {module}')`**
+-   **Follow existing menu structure and placement**
+-   **Place under appropriate section (e.g., CRM for customer-related modules)**
+-   **Use proper route names and active state checking**
+-   **ALWAYS use translations from `dashboard.php` language files for menu titles**
+-   **Use `{{ __('dashboard.key') }}` syntax for all menu text (e.g., `{{ __('dashboard.maintenance_requests') }}`)**
+-   **Never use hardcoded English text in menu items**
+
+#### 12. Translations & Localization
+
+-   **Add new module translations to `lang/en/dashboard.php`**
+-   **Add new module translations to `lang/ar/dashboard.php`**
+-   **Use consistent translation key naming (e.g., `customer_complaints`, `add_complaint`, `edit_complaint`)**
+-   **Include all user-facing strings: titles, buttons, labels, messages, statuses**
+-   **Use `{{ __('dashboard.key') }}` syntax in all Blade views and Livewire components**
+-   **Never use hardcoded English text in views or components**
+
+### Module File Structure Example
+
+```
+app/
+├── Models/
+│   └── {ModuleName}.php
+├── Http/
+│   ├── Controllers/
+│   │   └── Apps/
+│   │       └── {ModuleName}Controller.php
+├── Livewire/
+│   ├── {ModuleName}Modal.php (thin component - handles UI state and events)
+│   └── Forms/
+│       └── {ModuleName}Form.php (required - handles validation and business logic)
+├── DataTables/
+│   └── {ModuleName}DataTable.php
+
+
+resources/
+└── views/
+    ├── pages/
+    │   └── apps/
+    │       └── {module-name}/
+    │           ├── list.blade.php (only this view needed)
+    │           └── columns/
+    │               ├── _actions.blade.php (action buttons)
+    │               └── _draw-scripts.js (delete functionality and DataTable interactions)
+    └── livewire/
+        ├── {module-name}-modal.blade.php (Bootstrap modal with form)
+
+database/
+├── migrations/
+│   └── create_{module_name}_table.php
+└── seeders/
+    ├── {ModuleName}Seeder.php
+```
+
+### Permission Structure
+
+-   **IMPORTANT**: This system uses a different permission structure than standard Spatie Laravel Permission
+-   Add only the module name to `RolesPermissionsSeeder.php` (e.g., 'products')
+-   The system automatically generates: `view products`, `create products`, `edit products`, `delete products`
+-   **DO NOT** use dot notation like `products.view` - use space notation like `view products`
+-   Assign permissions to roles in `RolesPermissionsSeeder.php` inside `permissions_by_role['administrator']` array
+-   Implement proper authorization checks in controllers and Livewire components using the generated permission names
+
+### CRUD Operations Pattern
+
+1. **Index**: DataTable listing with search/filter (handled by controller)
+2. **Create**: Bootstrap modal form with Livewire Form class validation
+3. **Edit**: Same modal form with pre-filled data (Livewire Form class handles data loading)
+4. **Delete**: Direct deletion via Livewire events with SweetAlert2 confirmation
+5. **Show**: Optional - can be implemented as modal or separate route if needed
+6. **All CRUD operations are handled by Livewire Form classes, Modal components only handle UI state**
+
+### Delete Functionality Pattern
+
+-   **Action Button**: Use `data-kt-action="delete_row"` and `data-{module}-id="{{ $item->id }}"`
+-   **Draw Scripts**: Create `columns/_draw-scripts.js` with delete event listeners
+-   **Confirmation**: Use SweetAlert2 for delete confirmation
+-   **Livewire Event**: Dispatch `delete_{module}` event with item ID
+-   **DataTable Reload**: Automatically reload DataTable after successful deletion
+
+### Asset Management
+
+-   Add custom CSS/JS in `resources/assets/`
+-   Use Laravel Mix for compilation
+-   Follow existing asset organization patterns
+-   Implement proper asset versioning
+
+### Adding Permissions to RolesPermissionsSeeder
+
+When creating a new module, add the module name to the `permissions_by_role['administrator']` array:
+
+### Adding Module Seeders to BasicDatabaseSeeder
+
+**IMPORTANT**: Always add your new module seeder to `database/seeders/BasicDatabaseSeeder.php`:
+**Note**: Add the seeder after `RolesPermissionsSeeder::class` to ensure permissions are created before seeding module data.
