@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'STC Forward';
+    src: url('STCForward-Regular.eot');
+    src: url('STCForward-Regular.eot?#iefix') format('embedded-opentype'),
+        url('STCForward-Regular.woff2') format('woff2'),
+        url('STCForward-Regular.woff') format('woff'),
+        url('STCForward-Regular.ttf') format('truetype'),
+        url('STCForward-Regular.svg#STCForward-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'STC Forward';
+    src: url('STCForward-Bold.eot');
+    src: url('STCForward-Bold.eot?#iefix') format('embedded-opentype'),
+        url('STCForward-Bold.woff2') format('woff2'),
+        url('STCForward-Bold.woff') format('woff'),
+        url('STCForward-Bold.ttf') format('truetype'),
+        url('STCForward-Bold.svg#STCForward-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+

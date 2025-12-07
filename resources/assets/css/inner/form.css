@@ -1,0 +1,51 @@
+.phone-inputs {
+    display: flex;
+    gap: 20px;
+}
+
+.form-control {
+    width: 100%;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    background-color: white;
+    font-size: 16px;
+    color: var(--secondary-color);
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+}
+.form-control.error {
+    border-color: var(--red-color);
+}
+
+.form-control::placeholder {
+    color: var(--secondary-color);
+}
+
+.form-control:not(textarea) {
+    height: 45px;
+}
+
+.form-group label:not(.error) {
+    color: var(--secondary-color);
+    display: block;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+label.error {
+    display: block;
+    font-size: 14px;
+    color: red;
+    margin: 5px 0 0;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

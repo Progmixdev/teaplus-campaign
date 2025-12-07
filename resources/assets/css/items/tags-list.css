@@ -1,0 +1,28 @@
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tags-list li .item {
+    background: var(--gradient-color);
+    color: var(--base-color);
+    padding: 13px 24px;
+    border-radius: var(--border-radius) 0 var(--border-radius)
+        var(--border-radius);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 991.98px) {
+    .tags-list li .item {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 575.98px) {
+    .tags-list li .item {
+        font-size: 16px;
+        padding: 11px 20px;
+    }
+}

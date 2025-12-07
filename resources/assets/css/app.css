@@ -1,0 +1,12 @@
+@import "./shared/vars.css";
+@import "./shared/base.css";
+@import "./shared/grids.css";
+@import "./shared/header.css";
+/* @import "./shared/footer.css"; */
+@import "./shared/button.css";
+@import "./shared/main-classes.css";
+/* @import "./items/tags-list.css"; */
+@import "./inner/inner-page.css";
+@import "./inner/form.css";
+/* @import "../fonts/icomoon/style.css";
+@import "../fonts/STC/stylesheet.css"; */

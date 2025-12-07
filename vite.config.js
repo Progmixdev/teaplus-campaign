@@ -1,16 +1,26 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import cp from "vite-plugin-cp";
+import path from "path";
+
+const FrontEndPath = path.resolve(__dirname, "resources/assets");
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                'resources/css/app.css', 
-                'resources/js/app.js',
-            ],
             refresh: true,
+            buildDirectory: "front",
+            input: [
+                `${FrontEndPath}/js/jquery.js`,
+                `${FrontEndPath}/js/app.js`,
+                `${FrontEndPath}/css/app.css`,
+            ],
         }),
-        tailwindcss(),
+        cp({
+            targets: [
+                { src: `${FrontEndPath}/images`, dest: "public/assets/images" },
+            ],
+        }),
     ],
+    assetsInclude: ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
 });

@@ -18,29 +18,24 @@ html {
 body {
     cursor: default;
     margin: 0;
-    overflow-x: hidden;
-    color: var(--primary-gray-color);
 }
 
-main {
-    background-color: #fff;
-    min-height: calc(100vh - 413px);
+.wrapper {
+    overflow: hidden;
 }
 
 img,
-video,
 iframe {
-    display: block;
     max-width: 100%;
+}
+
+img {
+    display: block;
 }
 
 a[href] {
     text-decoration: none;
     cursor: pointer;
-}
-
-form {
-    margin: 0;
 }
 
 button {
@@ -49,4 +44,9 @@ button {
 
 textarea {
     resize: none;
+}
+
+.lazyloaded {
+    height: auto;
+    width: auto;
 }

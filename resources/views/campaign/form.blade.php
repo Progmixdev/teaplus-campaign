@@ -1,56 +1,67 @@
 @extends('layouts.app')
 
-@section('title', 'Campaign Form')
+@section('title', 'حملاتنا الجديدة')
 
 @section('content')
-    <div class="container">
-        <div class="form-wrapper">
-            <h1 class="form-title">Campaign Form</h1>
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
-            <form action="{{ route('campaign.store') }}" method="POST" enctype="multipart/form-data" novalidate="novalidate"
-                id="campaignForm" class="campaign-form">
-                @csrf
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="phone_number" class="form-label">Phone Number</label>
-                            <input type="text" id="phone_number" name="phone_number" class="form-control"
-                                placeholder="Enter phone number">
-                            @error('phone_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="campaign_number" class="form-label">Campaign Number</label>
-                            <input type="text" id="campaign_number" name="campaign_number" class="form-control"
-                                placeholder="Enter campaign number">
-                            @error('campaign_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    {{-- <div class="col-12">
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="active" name="active" class="form-checkbox" value="1">
-                                <span class="checkbox-text">Active</span>
-                            </label>
-                        </div>
-                    </div> --}}
-                    <div class="col-12">
-                        <div class="form-group">
-                            <button type="submit" class="submit-button">Submit</button>
+    <div class="inner-page">
+        <div class="container">
+            <div class="inner-body">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="box">
+                            <div class="inner-body-content">
+                                <h1 class="inner-body-page-title">
+                                    لا تفوت الفرصة! سجل الآن
+                                </h1>
+                                <div>
+                                    <div id="alert-message"></div>
+                                    <form data-action="{{ route('campaign.store') }}" method="POST"
+                                        enctype="multipart/form-data" novalidate="novalidate" id="validate-form">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="phone" class="form-label">رقم الهاتف</label>
+                                                    <div class="row">
+                                                        <div class="col-7">
+                                                            <input type="number" name="phone" value="{{ old('phone') }}"
+                                                                placeholder="رقم الهاتف" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <select name="phone_code" class="form-control">
+                                                                <option value="+970" selected>970+</option>
+                                                                <option value="+972">972+</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="campaign_number" class="form-label">رقم الحملة</label>
+                                                    <input type="text" id="campaign_number" name="campaign_number"
+                                                        value="{{ old('campaign_number') }}" class="form-control"
+                                                        placeholder="أدخل رقم الحملة">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <button class="g-recaptcha btn btn-full btn-primary"
+                                                        data-sitekey="{{ config('services.captcha.site_key') }}"
+                                                        data-callback='onSubmit' data-action='submit' type="submit"
+                                                        id="register-submit">سجل الان
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @endsection

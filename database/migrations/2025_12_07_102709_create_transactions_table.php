@@ -13,10 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('phone_number');
+            $table->string('phone');
+            $table->string('campaign_id')->nullable();
             $table->string('campaign_number');
-            $table->date('date');
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->json('browser_data')->nullable();
+            $table->string('fingerprint')->nullable()->index();
+            $table->unique(['campaign_id', 'fingerprint']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -1,0 +1,43 @@
+{
+    // General Formatting
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": false,
+
+    // Prettier settings
+    "prettier.singleQuote": true,
+    "prettier.semi": true,
+    "prettier.trailingComma": "es5",
+    "prettier.printWidth": 120,
+    "prettier.tabWidth": 4,
+    "editor.tabSize": 4,
+    "prettier.useTabs": false,
+
+    // PHP formatting (in case of Laravel/PHP files)
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+
+    // Blade formatting
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+    },
+    "bladeFormatter.format.enabled": true,
+    "bladeFormatter.format.sortTailwindcssClasses": false,
+    "bladeFormatter.format.indentSize": 4,
+
+    // HTML/CSS/JS Formatting
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Optional: Disable conflicting formatters
+    "phpcs.enable": false,
+}

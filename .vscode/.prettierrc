@@ -1,0 +1,10 @@
+{
+  "singleQuote": true,
+  "tabWidth": 4,
+  "semi": true,
+  "plugins": [
+    "prettier-plugin-blade",
+    "prettier-plugin-php"
+  ],
+  "pluginSearchDirs": false
+}
