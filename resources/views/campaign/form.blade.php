@@ -3,6 +3,9 @@
 @section('title', 'حملاتنا الجديدة')
 
 @section('content')
+    @php
+        $assetsVersion = '0.0.0.1' . time();
+    @endphp
     <div class="inner-page">
         <div class="container">
             <div class="inner-body">
@@ -48,7 +51,7 @@
                         </form>
                     </div>
                     <div class="inner-body-image">
-                        <img src="{{ asset('assets/images/iphone.png') }}" alt="Iphone">
+                        <img src="{{ asset('assets/images/iphone-1.png') . '?v=' . $assetsVersion }}" alt="Iphone">
                     </div>
                 </div>
             </div>

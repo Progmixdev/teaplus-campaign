@@ -2,6 +2,9 @@
 <html lang="ar" dir="rtl">
 
 <head>
+    @php
+        $assetsVersion = '0.0.0.1' . time();
+    @endphp
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,9 +20,9 @@
     <meta name="apple-mobile-web-app-title" content="United Securities" />
     <link rel="manifest" href="{{ asset('site.webmanifest') }}" />
 
-    <link rel="preload" href="{{ asset('assets/images/shadow.webp') }}" as="image" />
-    <link rel="preload" href="{{ asset('assets/images/iphone.png') }}" as="image" />
-    <link rel="preload" href="{{ asset('assets/images/logo.png') }}" as="image" />
+    <link rel="preload" href="{{ asset('assets/images/shadow.webp') . '?v=' . $assetsVersion }}" as="image" />
+    <link rel="preload" href="{{ asset('assets/images/iphone.png') . '?v=' . $assetsVersion }}" as="image" />
+    <link rel="preload" href="{{ asset('assets/images/logo.png') . '?v=' . $assetsVersion }}" as="image" />
 
     <style nonce="{{ csp_nonce() }}">
         body {
@@ -41,7 +44,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("{{ asset('assets/images/shadow.webp') }}");
+            background-image: url("{{ asset('assets/images/shadow.webp') . '?v=' . $assetsVersion }}");
             background-position: center;
             background-size: auto 100%;
             background-repeat: repeat-x;
@@ -65,7 +68,8 @@
     <header class="header">
         <div class="container">
             <div class="header-logo">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Tea Plus Logo" width="130" height="50">
+                <img src="{{ asset('assets/images/logo.png') . '?v=' . $assetsVersion }}" alt="Tea Plus Logo"
+                    width="130" height="50">
             </div>
         </div>
     </header>
