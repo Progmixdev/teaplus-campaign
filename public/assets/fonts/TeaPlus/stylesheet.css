@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "TeaPlus";
+    src: url("../../assets/fonts/TeaPlus/TeaPlus-Regular.eot");
+    src: url("../../assets/fonts/TeaPlus/TeaPlus-Regular.eot?#iefix")
+            format("embedded-opentype"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Regular.woff2") format("woff2"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Regular.woff") format("woff"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Regular.ttf") format("truetype"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Regular.svg#TeaPlus-Regular")
+            format("svg");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "TeaPlus";
+    src: url("../../assets/fonts/TeaPlus/TeaPlus-Bold.eot");
+    src: url("../../assets/fonts/TeaPlus/TeaPlus-Bold.eot?#iefix")
+            format("embedded-opentype"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Bold.woff2") format("woff2"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Bold.woff") format("woff"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Bold.ttf") format("truetype"),
+        url("../../assets/fonts/TeaPlus/TeaPlus-Bold.svg#TeaPlus-Bold")
+            format("svg");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}

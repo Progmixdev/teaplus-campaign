@@ -1,9 +1,9 @@
 :root {
-    --primary-color: #8e4ba8;
-    --primary-color-rgb: 142, 75, 168;
+    --primary-color: #8f549a;
+    --primary-color-rgb: 143, 84, 154;
 
-    --secondary-color: #5e5e5e;
-    --secondary-color-rgb: 94, 94, 94;
+    --secondary-color: #bb82c5;
+    --secondary-color-rgb: 187, 130, 197;
 
     --base-color: white;
     --base-color-rgb: 255, 255, 255;
@@ -11,14 +11,14 @@
     --red-color: #980202;
     --green-color: #228802;
 
-    --container-width: 1190px;
-    --gutter-x: 15px;
+    --container-width: 576px;
+    --gutter-x: 10px;
 
-    --border-radius: 12px;
+    --border-radius: 40px;
 
     --inner-section-gutter: 60px;
 
-    --font: sans-serif;
+    --font: "TeaPlus", sans-serif;
 }
 
 @media screen and (max-width: 1199.98px) {

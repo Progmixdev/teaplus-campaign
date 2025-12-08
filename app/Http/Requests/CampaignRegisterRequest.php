@@ -30,14 +30,9 @@ class CampaignRegisterRequest extends FormRequest
             'campaign_number'    => ['required', 'exists:campaigns,campaign_number', 'max:191', new NoPathTraversal],
             'phone'   => [
                 'required',
-                'regex:/^0?5[0-9]\d{7}$/',
+                'regex:/^(?:\+?(?:972|970)5\d{7}|00(?:972|970)5\d{7}|0?5\d{8})$/',
                 'min:9',
-                'max:9',
-                new NoPathTraversal
-            ],
-            'phone_code'   => [
-                'required',
-                'regex:/^\+?(972|970)$/',
+                'max:13',
                 new NoPathTraversal
             ],
         ];
@@ -70,8 +65,8 @@ class CampaignRegisterRequest extends FormRequest
             'campaign_number.exists'    => 'رقم الحملة خاطئ',
             'phone.required' => 'رقم الهاتف مطلوب',
             'phone.regex'    => 'رقم الهاتف غير صالح',
-            'phone.min'      => 'رقم الهاتف يجب أن يكون أطول من 8 أرقام',
-            'phone.max'      => 'رقم الهاتف يجب أن يكون أقصر من 20 أرقام',
+            'phone.min'      => 'رقم الهاتف يجب أن يكون 9 أرقام على الأقل',
+            'phone.max'      => 'رقم الهاتف يجب أن يكون 13 أرقام على الأكثر',
             'g-recaptcha-response.required' => 'التحقق مطلوب',
             'g-recaptcha-response.captcha'  => 'التحقق غير صالح',
         ];

@@ -1,10 +1,5 @@
 .header {
-    padding: 50px 0 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1030;
+    padding: 40px 0;
 }
 
 .header-logo,
@@ -13,9 +8,9 @@
 }
 
 .header-logo img {
-    width: 230px;
+    width: 130px;
     height: auto;
-    max-height: 118px;
+    max-height: 50px;
     object-fit: contain;
     margin: 0 auto;
 }

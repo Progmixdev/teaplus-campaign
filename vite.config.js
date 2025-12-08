@@ -19,6 +19,7 @@ export default defineConfig({
         cp({
             targets: [
                 { src: `${FrontEndPath}/images`, dest: "public/assets/images" },
+                { src: `${FrontEndPath}/fonts`, dest: "public/assets/fonts" },
             ],
         }),
     ],

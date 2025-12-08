@@ -4,9 +4,8 @@ import "./shared.js";
 import "jquery-validation";
 
 (($) => {
-    const phoneExpression = /^0?5[0-9]\d{7}$/;
-
-    const countryCodeRegex = /^\+?(972|970)$/;
+    const phoneExpression =
+        /^(?:\+?(?:972|970)5\d{7}|00(?:972|970)5\d{7}|0?5\d{8})$/;
 
     const form = $("#validate-form");
 
@@ -18,28 +17,16 @@ import "jquery-validation";
         "رقم الهاتف غير صالح"
     );
 
-    jQuery.validator.addMethod(
-        "palestineCode",
-        function (value, element) {
-            return countryCodeRegex.test(value);
-        },
-        "رقم الهاتف غير صالح"
-    );
-
     form.validate({
         rules: {
             campaign_number: {
                 required: true,
             },
-            phone_code: {
-                required: true,
-                palestineCode: true,
-            },
             phone: {
                 required: true,
                 palestineMobile: true,
                 minlength: 9,
-                maxlength: 9,
+                maxlength: 13,
             },
         },
         messages: {
@@ -49,11 +36,8 @@ import "jquery-validation";
             phone: {
                 required: "رقم الهاتف مطلوب",
                 palestineMobile: "رقم الهاتف غير صالح",
-                minlength: "رقم الهاتف يجب أن يكون 9 أرقام فقط",
-                maxlength: "رقم الهاتف يجب أن يكون 9 أرقام فقط",
-            },
-            phone_code: {
-                required: "كود الدولة مطلوب",
+                minlength: "رقم الهاتف يجب أن يكون 9 أرقام على الأقل",
+                maxlength: "رقم الهاتف يجب أن يكون 13 أرقام على الأكثر",
             },
         },
         errorPlacement: function (error, element) {

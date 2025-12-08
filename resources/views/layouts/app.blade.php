@@ -33,7 +33,7 @@
     <header class="header">
         <div class="container">
             <div class="header-logo">
-                <img src="{{ asset('assets/images/logo.svg') }}" alt="Tea Plus Logo" width="230" height="118">
+                <img src="{{ asset('assets/images/logo.png') }}" alt="Tea Plus Logo" width="130" height="50">
             </div>
         </div>
     </header>

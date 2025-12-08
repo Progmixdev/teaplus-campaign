@@ -18,7 +18,6 @@ class CampaignController extends Controller
     {
         try {
             $formData = $request->validated();
-            $formData['phone'] = $request->phone_code . ltrim($request->phone, '0');
             $campaign = Campaign::where('campaign_number', $formData['campaign_number'])->where('active', true)->first();
 
             if (!$campaign) {

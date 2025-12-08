@@ -12,6 +12,10 @@
     justify-content: center;
 }
 
+.justify-content-end {
+    justify-content: flex-end;
+}
+
 .gap {
     gap: var(--gutter-x);
 }
