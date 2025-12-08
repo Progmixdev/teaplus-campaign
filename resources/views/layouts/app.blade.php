@@ -17,6 +17,38 @@
     <meta name="apple-mobile-web-app-title" content="United Securities" />
     <link rel="manifest" href="{{ asset('site.webmanifest') }}" />
 
+    <link rel="preload" href="{{ asset('assets/images/shadow.webp') }}" as="image" />
+    <link rel="preload" href="{{ asset('assets/images/iphone.png') }}" as="image" />
+    <link rel="preload" href="{{ asset('assets/images/logo.png') }}" as="image" />
+
+    <style nonce="{{ csp_nonce() }}">
+        body {
+            cursor: default;
+            margin: 0;
+            background-color: var(--primary-color);
+            position: relative;
+            z-index: 1;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("{{ asset('assets/images/shadow.webp') }}");
+            background-position: center;
+            background-size: auto 100%;
+            background-repeat: repeat-x;
+            z-index: -1;
+        }
+    </style>
+
     {{ Vite::useBuildDirectory('front') }}
     @vite(['resources/assets/css/app.css'])
 

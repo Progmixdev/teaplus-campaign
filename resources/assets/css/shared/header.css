@@ -14,7 +14,7 @@
     object-fit: contain;
     margin: 0 auto;
 }
-
+/* 
 @media screen and (max-width: 991.98px) {
     .header {
         padding-top: 50px;
@@ -39,4 +39,4 @@
     .header-logo img {
         width: 130px;
     }
-}
+} */

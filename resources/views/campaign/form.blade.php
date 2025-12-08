@@ -48,7 +48,7 @@
                         </form>
                     </div>
                     <div class="inner-body-image">
-                        <img src="{{ asset('assets/images/iphone.webp') }}" alt="Iphone">
+                        <img src="{{ asset('assets/images/iphone.png') }}" alt="Iphone">
                     </div>
                 </div>
             </div>
