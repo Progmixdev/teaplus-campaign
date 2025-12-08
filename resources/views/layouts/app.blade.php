@@ -21,7 +21,6 @@
     <link rel="manifest" href="{{ asset('site.webmanifest') }}" />
 
     <link rel="preload" href="{{ asset('assets/images/shadow.webp') . '?v=' . $assetsVersion }}" as="image" />
-    <link rel="preload" href="{{ asset('assets/images/iphone.png') . '?v=' . $assetsVersion }}" as="image" />
     <link rel="preload" href="{{ asset('assets/images/logo.png') . '?v=' . $assetsVersion }}" as="image" />
 
     <style nonce="{{ csp_nonce() }}">

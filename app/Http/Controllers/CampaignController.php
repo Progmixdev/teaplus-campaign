@@ -27,6 +27,12 @@ class CampaignController extends Controller
                 ], 404);
             }
 
+            $phone = preg_replace('/^(?:\+?972|\+?970|00972|00970)/', '', $formData['phone']);
+
+            if (!str_starts_with($phone, '0')) {
+                $phone = '0' . $phone;
+            }
+
             $browserData = [
                 'user_agent' => $request->userAgent(),
                 'ip_address' => $request->ip(),
@@ -41,8 +47,7 @@ class CampaignController extends Controller
             );
 
             $alreadySubmitted = Transaction::where('campaign_number', $formData['campaign_number'])
-                ->where('phone', $formData['phone'])
-                ->where('fingerprint', $fingerprint)
+                ->where('phone',  $phone)
                 ->exists();
 
             if ($alreadySubmitted) {
@@ -57,7 +62,7 @@ class CampaignController extends Controller
             Transaction::create(
                 [
                     'campaign_id'  => $campaign->id,
-                    'phone'        => $formData['phone'],
+                    'phone'        =>  $phone,
                     'campaign_number' => $formData['campaign_number'],
                     'ip_address'   => $request->ip(),
                     'user_agent'   => $request->userAgent(),

@@ -5,7 +5,7 @@ import "jquery-validation";
 
 (($) => {
     const phoneExpression =
-        /^(?:\+?(?:972|970)5\d{7}|00(?:972|970)5\d{7}|0?5\d{8})$/;
+        /^(?:\+?(?:972|970)5\d{7,8}|00(?:972|970)5\d{7,8}|0?5\d{8,9})$/;
 
     const form = $("#validate-form");
 
@@ -26,7 +26,7 @@ import "jquery-validation";
                 required: true,
                 palestineMobile: true,
                 minlength: 9,
-                maxlength: 13,
+                maxlength: 14,
             },
         },
         messages: {
@@ -37,7 +37,7 @@ import "jquery-validation";
                 required: "رقم الهاتف مطلوب",
                 palestineMobile: "رقم الهاتف غير صالح",
                 minlength: "رقم الهاتف يجب أن يكون 9 أرقام على الأقل",
-                maxlength: "رقم الهاتف يجب أن يكون 13 أرقام على الأكثر",
+                maxlength: "رقم الهاتف يجب أن يكون 14 أرقام على الأكثر",
             },
         },
         errorPlacement: function (error, element) {
@@ -62,7 +62,7 @@ import "jquery-validation";
                 },
                 success: function (response) {
                     $("#alert-message").html(
-                        '<div class="alert alert-success">' +
+                        '<div class="alert alert-success mb-30">' +
                             response.message +
                             "</div>"
                     );
