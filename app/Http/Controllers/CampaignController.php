@@ -73,7 +73,7 @@ class CampaignController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم التسجيل بنجاح!',
+                'message' => 'مبروك، دخلت السحب على آيفون 17 برو من تي بلس',
             ], 200);
         } catch (\Exception $e) {
             dd($e->getMessage());

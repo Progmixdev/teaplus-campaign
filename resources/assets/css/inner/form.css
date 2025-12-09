@@ -40,8 +40,11 @@
 label.error {
     display: block;
     font-size: 14px;
-    color: red;
+    color: var(--base-color);
     margin: 5px 0 0;
+}
+label.error * {
+    color: var(--base-color);
 }
 
 input[type="number"]::-webkit-outer-spin-button,

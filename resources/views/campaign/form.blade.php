@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="campaign_number" class="form-label">كود الحملة</label>
+                                        <label for="campaign_number" class="form-label">الكود السرّي</label>
                                         <input type="number" id="campaign_number" name="campaign_number"
                                             value="{{ old('campaign_number') }}" class="form-control">
 

@@ -62,7 +62,7 @@ class CampaignRegisterRequest extends FormRequest
             'campaign_number.required'  => 'رقم الحملة مطلوب',
             'campaign_number.max'       => 'رقم الحملة يجب أن يكون أقصر من 191 حرف',
             'campaign_number.string'    => 'رقم الحملة يجب أن يكون عبارة عن نص',
-            'campaign_number.exists'    => 'رقم الحملة خاطئ',
+            'campaign_number.exists'    => 'الكود السرّي خاطئ. إرجع للعبة ودوّر عليه </br><a href="https://winter.teaplus.me/play" target="_blank">https://winter.teaplus.me/play</a>',
             'phone.required' => 'رقم الهاتف مطلوب',
             'phone.regex'    => 'رقم الهاتف غير صالح',
             'phone.min'      => 'رقم الهاتف يجب أن يكون 9 أرقام على الأقل',
