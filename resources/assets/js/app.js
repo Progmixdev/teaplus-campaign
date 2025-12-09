@@ -103,6 +103,9 @@ import "jquery-validation";
                                 "</div>"
                         );
                     }
+                    if (typeof grecaptcha !== "undefined") {
+                        grecaptcha.reset();
+                    }
                 },
                 complete: function () {
                     const submitBtn = $(form).find("#register-submit");
@@ -110,6 +113,9 @@ import "jquery-validation";
                     submitBtn.html(
                         submitBtn.data("original-text") || "سجل الان"
                     );
+                    if (typeof grecaptcha !== "undefined") {
+                        grecaptcha.reset();
+                    }
                 },
             });
         } else {
