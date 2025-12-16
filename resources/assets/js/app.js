@@ -87,7 +87,7 @@ import "jquery-validation";
                         } else {
                             let errorMessage =
                                 xhr.responseJSON?.message ||
-                                "حدث خطأ غير متوقع";
+                                "حدث خطأ غير متوقع1";
                             $("#alert-message").html(
                                 '<div class="alert alert-danger mb-30">' +
                                     errorMessage +
@@ -96,7 +96,7 @@ import "jquery-validation";
                         }
                     } else {
                         let errorMessage =
-                            xhr.responseJSON?.message || "حدث خطأ غير متوقع";
+                            xhr.responseJSON?.message || "2حدث خطأ غير متوقع";
                         $("#alert-message").html(
                             '<div class="alert alert-danger mb-30">' +
                                 errorMessage +
